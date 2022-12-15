@@ -1,19 +1,18 @@
-import docx2txt
-import textract
-import os
 import json
+import aspose.words as aw
+
 MAIN = "C:\\projects\\hack\\XmasHack\\backend\\data\\"
 
 def open_doc(name="doc.docx", format="r"):
-    if ".docx" in name:
-        return docx2txt.process(name)
-    else:
-        try:
-            os.rename(name, name + 'x')
-        except:
-            print("Did this")
+    doc = aw.Document(name)
+    return doc.get_text()
 
-def parser_doc_docx():
+
+def doc(self): #for rtf/doc/docx files
+        doc = aw.Document(self.input)
+        doc.save(f'{self.output}\\{self.name_of_file}.txt')
+
+def parser_doc_docx_rtf():
     jsonf = json_open(MAIN + "classes.json")
     result = dict()
     acc = 0
@@ -21,15 +20,9 @@ def parser_doc_docx():
         result[acc] = dict()
         result[acc]['file_id'] = file_name
         result[acc]['file_class'] = jsonf[file_name]
-        if ".docx" in file_name:
-            doc_str = open_doc(MAIN + "docs\\" + file_name)
-            result[acc]['file_body'] = doc_str
-        elif ".doc" in file_name:
-            pass
-            #doc_str = open_doc(MAIN + file_name)
-            #result['file_body'] = doc_str
+        doc_str = open_doc(MAIN + "docs\\" + file_name)
+        result[acc]['file_body'] = doc_str
         acc += 1
-
     print("Success!")
     return result
 
@@ -66,4 +59,4 @@ def json_open(path: str = None):
 
 if __name__ == '__main__':
     with open(MAIN + "docx.json", "w") as f:
-        json.dump(parser_doc_docx(), f)
+        json.dump(parser_doc_docx_rtf(), f)
