@@ -1,7 +1,8 @@
 import json
+import os
 import aspose.words as aw
+from backend.config import DATA_PATH
 
-MAIN = "C:\\projects\\hack\\XmasHack\\backend\\data\\"
 
 def open_doc(name="doc.docx", format="r"):
     doc = aw.Document(name)
@@ -13,14 +14,14 @@ def doc(self): #for rtf/doc/docx files
         doc.save(f'{self.output}\\{self.name_of_file}.txt')
 
 def parser_doc_docx_rtf():
-    jsonf = json_open(MAIN + "classes.json")
+    jsonf = json_open(os.path.join(DATA_PATH, "classes.json"))
     result = dict()
     acc = 0
     for file_name in jsonf.keys():
         result[acc] = dict()
         result[acc]['file_id'] = file_name
         result[acc]['file_class'] = jsonf[file_name]
-        doc_str = open_doc(MAIN + "docs\\" + file_name)
+        doc_str = open_doc(os.path.join(DATA_PATH, file_name))
         result[acc]['file_body'] = doc_str
         acc += 1
     print("Success!")
@@ -58,5 +59,5 @@ def json_open(path: str = None):
 
 
 if __name__ == '__main__':
-    with open(MAIN + "docx.json", "w") as f:
+    with open(os.path.join(DATA_PATH, "docx.json"), "w") as f:
         json.dump(parser_doc_docx_rtf(), f)
