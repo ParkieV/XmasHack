@@ -2,6 +2,7 @@ import json
 import os
 import aspose.words as aw
 from backend.config import DATA_PATH
+from backend.utils.pdf_parser import PDFParser
 
 
 def open_doc(name="doc.docx", format="r"):
@@ -19,10 +20,14 @@ def parser_doc_docx_rtf():
     acc = 0
     for file_name in jsonf.keys():
         result[acc] = dict()
-        result[acc]['file_id'] = file_name
-        result[acc]['file_class'] = jsonf[file_name]
-        doc_str = open_doc(os.path.join(DATA_PATH, file_name))
-        result[acc]['file_body'] = doc_str
+        if '.pdf' in file_name:
+            p = PDFParser(file_name)
+            result[acc] = p.parse()
+        else:
+            result[acc]['file_id'] = file_name
+            result[acc]['file_class'] = jsonf[file_name]
+            doc_str = open_doc(os.path.join(DATA_PATH, file_name))
+            result[acc]['file_body'] = doc_str
         acc += 1
     print("Success!")
     return result
