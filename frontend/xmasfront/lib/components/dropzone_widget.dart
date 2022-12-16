@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:xmasfront/pages/result.dart';
 import 'class/dropped_file.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -21,7 +22,6 @@ class DropzoneWidget extends StatefulWidget {
 }
 
 class _DropzoneWidgetState extends State<DropzoneWidget> {
-    
   late DropzoneViewController controller;
   bool isHighlighted = false;
 
@@ -70,6 +70,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
 
                     DroppedFile file = await acceptFile(events.first);
                     fetchData(file);
+                    const ResultPage();
                   },
                   icon: const Icon(
                     Icons.search,
@@ -110,12 +111,19 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     final bytes = await controller.getFileSize(event);
     final url = await controller.createFileUrl(event);
 
-    print('File name: $name');
+    /*print('File name: $name');
     print('File mime: $mime');
     print('File size: $bytes');
-    print('File url: $url');
+    print('File url: $url');*/
 
     final droppedUint = await controller.getFileData(event);
+    fetchData(file) async {
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('http://localhost:8000/api/upload'))
+        ..files.add(await http.MultipartFile.fromBytes('file', file,
+            filename: "file_name"));
+    }
+
     final droppedFile = DroppedFile(
       name: name,
       bytes: bytes,
