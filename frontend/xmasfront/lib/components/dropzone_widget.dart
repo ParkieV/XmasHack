@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'class/dropped_file.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 
 class DropzoneWidget extends StatefulWidget {
@@ -128,13 +129,15 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
   }
 
    fetchData(file) async {
-var request = http.MultipartRequest('POST', Uri.parse("http://0.0.0.0:8000/api/upload"));
-  request.files.add(
-    await http.MultipartFile.fromBytes(
-      'pdf',
-       file
-    )
-  );
+    var request = http.MultipartRequest('POST', Uri.parse('http://localhost:8000/api/upload'))..files.add(await http.MultipartFile.fromBytes('file', file));
+// var request = http.MultipartRequest('POST', Uri.parse("http://0.0.0.0:8000/api/upload"));
+//   request.files.add(
+//     http.MultipartFile.fromBytes(
+//       'df',
+//        file
+//     )
+//   );
+var res = await request.send();
 
     // var response = await http.post(Uri.parse('http://0.0.0.0:8000/api/upload'), body: {"file": DroppedFile});
 // print("Response status: ${response.statusCode}");
