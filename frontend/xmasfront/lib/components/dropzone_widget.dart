@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:xmasfront/pages/result.dart';
 import 'class/dropped_file.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -20,7 +21,6 @@ class DropzoneWidget extends StatefulWidget {
 }
 
 class _DropzoneWidgetState extends State<DropzoneWidget> {
-    
   late DropzoneViewController controller;
   bool isHighlighted = false;
 
@@ -69,6 +69,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
 
                     Uint8List file = await acceptFile(events.first);
                     fetchData(file);
+                    const ResultPage();
                   },
                   icon: const Icon(
                     Icons.search,
@@ -127,14 +128,10 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     return droppedUint;
   }
 
-   fetchData(file) async {
-var request = http.MultipartRequest('POST', Uri.parse("http://0.0.0.0:8000/api/upload"));
-  request.files.add(
-    await http.MultipartFile.fromBytes(
-      'pdf',
-       file
-    )
-  );
+  fetchData(file) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse("http://0.0.0.0:8000/api/upload"));
+    request.files.add(await http.MultipartFile.fromBytes('pdf', file));
 
     // var response = await http.post(Uri.parse('http://0.0.0.0:8000/api/upload'), body: {"file": DroppedFile});
 // print("Response status: ${response.statusCode}");
