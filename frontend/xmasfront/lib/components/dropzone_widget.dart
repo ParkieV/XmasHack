@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'class/dropped_file.dart';
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class DropzoneWidget extends StatefulWidget {
   final ValueChanged<DroppedFile> onDroppedFile;
@@ -56,6 +60,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
                 const SizedBox(height: 20),
                 OutlinedButton.icon(
                   onPressed: () async {
+                    fetchData();
                     final events = await controller.pickFiles();
                     if (events.isEmpty) return;
 
@@ -114,5 +119,13 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
 
     widget.onDroppedFile(droppedFile);
     setState(() => isHighlighted = false);
+  }
+
+  void fetchData() async {
+    var dio = Dio();
+    var response =
+        await dio.post("http://0.0.0.0:8000", data: {'name': 'test'});
+    print(response.statusCode);
+    print(response.data.toString());
   }
 }
