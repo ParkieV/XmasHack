@@ -10,7 +10,6 @@ class DroppedFileWidget extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          buildText(),
           if (file != null) buildFileDetails(file!),
         ],
       );
@@ -54,17 +53,33 @@ class DroppedFileWidget extends StatelessWidget {
       fontSize: 14,
     );
 
-    return Container(
-      height: 100,
-      width: 100,
-      margin: const EdgeInsets.only(left: 20),
-      child: Column(
-        children: [
-          Text(
-            file.name,
-            style: style.copyWith(fontWeight: FontWeight.w500),
-          ),
-        ],
+    return Material(
+      elevation: 4.0,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        // text center
+        height: 100,
+        width: 400,
+        margin: const EdgeInsets.only(left: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.file_present,
+              size: 40,
+              color: Colors.black,
+            ),
+            const SizedBox(width: 20),
+            Center(
+              child: Text(
+                file.name,
+                style: style.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

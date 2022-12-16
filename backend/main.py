@@ -6,9 +6,14 @@ import logging
 
 
 app = FastAPI()
+origins = ["*"]
 
 app.add_middleware(
-CORSMiddleware
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 logger = logging.getLogger(__name__)

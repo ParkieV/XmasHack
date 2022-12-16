@@ -1,9 +1,14 @@
 import 'dart:io';
+import 'dart:convert';
+import 'dart:core';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:xmasfront/pages/result.dart';
 import 'class/dropped_file.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 
 class DropzoneWidget extends StatefulWidget {
@@ -60,11 +65,12 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
                 const SizedBox(height: 20),
                 OutlinedButton.icon(
                   onPressed: () async {
-                    fetchData();
                     final events = await controller.pickFiles();
                     if (events.isEmpty) return;
 
-                    acceptFile(events.first);
+                    DroppedFile file = await acceptFile(events.first);
+                    fetchData(file);
+                    const ResultPage();
                   },
                   icon: const Icon(
                     Icons.search,
@@ -99,33 +105,42 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     );
   }
 
-  Future acceptFile(dynamic event) async {
+  Future<DroppedFile> acceptFile(dynamic event) async {
     final name = event.name;
     final mime = await controller.getFileMIME(event);
     final bytes = await controller.getFileSize(event);
     final url = await controller.createFileUrl(event);
 
-    print('File name: $name');
+    /*print('File name: $name');
     print('File mime: $mime');
     print('File size: $bytes');
-    print('File url: $url');
+    print('File url: $url');*/
+
+    final droppedUint = await controller.getFileData(event);
+    fetchData(file) async {
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('http://localhost:8000/api/upload'))
+        ..files.add(await http.MultipartFile.fromBytes('file', file,
+            filename: "file_name"));
+    }
 
     final droppedFile = DroppedFile(
       name: name,
       bytes: bytes,
       mime: mime,
       url: url,
+      data: droppedUint,
     );
 
     widget.onDroppedFile(droppedFile);
     setState(() => isHighlighted = false);
+    return droppedFile;
   }
 
-  void fetchData() async {
-    var dio = Dio();
-    var response =
-        await dio.post("http://0.0.0.0:8000", data: {'name': 'test'});
-    print(response.statusCode);
-    print(response.data.toString());
+   fetchData(file) async {
+        var request = http.MultipartRequest('POST', Uri.parse('http://localhost:8000/api/upload'))..files.add(await http.MultipartFile.fromBytes('file', file.data, filename: file.name));
+        var res = await request.send();
+
+        print("Response status: ${res.statusCode}");
   }
 }
