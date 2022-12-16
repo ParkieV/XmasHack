@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from routes.router import router
+from backend.routes.router import router
 import logging
 
 
