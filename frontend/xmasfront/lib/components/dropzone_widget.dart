@@ -68,7 +68,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
                     final events = await controller.pickFiles();
                     if (events.isEmpty) return;
 
-                    Uint8List file = await acceptFile(events.first);
+                    DroppedFile file = await acceptFile(events.first);
                     fetchData(file);
                   },
                   icon: const Icon(
@@ -104,7 +104,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     );
   }
 
-  Future<Uint8List> acceptFile(dynamic event) async {
+  Future<DroppedFile> acceptFile(dynamic event) async {
     final name = event.name;
     final mime = await controller.getFileMIME(event);
     final bytes = await controller.getFileSize(event);
@@ -121,26 +121,18 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
       bytes: bytes,
       mime: mime,
       url: url,
+      data: droppedUint,
     );
 
     widget.onDroppedFile(droppedFile);
     setState(() => isHighlighted = false);
-    return droppedUint;
+    return droppedFile;
   }
 
    fetchData(file) async {
-    var request = http.MultipartRequest('POST', Uri.parse('http://localhost:8000/api/upload'))..files.add(await http.MultipartFile.fromBytes('file', file));
-// var request = http.MultipartRequest('POST', Uri.parse("http://0.0.0.0:8000/api/upload"));
-//   request.files.add(
-//     http.MultipartFile.fromBytes(
-//       'df',
-//        file
-//     )
-//   );
-var res = await request.send();
+        var request = http.MultipartRequest('POST', Uri.parse('http://localhost:8000/api/upload'))..files.add(await http.MultipartFile.fromBytes('file', file.data, filename: file.name));
+        var res = await request.send();
 
-    // var response = await http.post(Uri.parse('http://0.0.0.0:8000/api/upload'), body: {"file": DroppedFile});
-// print("Response status: ${response.statusCode}");
-// print("Response body: ${response.body}");
+        print("Response status: ${res.statusCode}");
   }
 }
