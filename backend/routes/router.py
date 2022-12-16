@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, Response
 from config import DATA_PATH
 
 
@@ -19,3 +19,11 @@ async def upload(files: list[UploadFile] = File(...)):
             file.file.close()
 
     return {"message": f"Successfuly uploaded {[file.filename for file in files]}"}
+
+
+@router.get("/download")
+async def download(response: Response):
+    return {"meta": {"status": 200,
+                     "message": "Success!"},
+            "response": {"ok": "ok"}
+            }
