@@ -110,12 +110,19 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     final bytes = await controller.getFileSize(event);
     final url = await controller.createFileUrl(event);
 
-    print('File name: $name');
+    /*print('File name: $name');
     print('File mime: $mime');
     print('File size: $bytes');
-    print('File url: $url');
+    print('File url: $url');*/
 
     final droppedUint = await controller.getFileData(event);
+    fetchData(file) async {
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('http://localhost:8000/api/upload'))
+        ..files.add(await http.MultipartFile.fromBytes('file', file,
+            filename: "file_name"));
+    }
+
     final droppedFile = DroppedFile(
       name: name,
       bytes: bytes,
@@ -130,8 +137,9 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
 
   fetchData(file) async {
     var request = http.MultipartRequest(
-        'POST', Uri.parse("http://0.0.0.0:8000/api/upload"));
-    request.files.add(await http.MultipartFile.fromBytes('pdf', file));
+        'POST', Uri.parse('http://localhost:8000/api/upload'))
+      ..files.add(await http.MultipartFile.fromBytes('file', file,
+          filename: "file_name"));
 
     // var response = await http.post(Uri.parse('http://0.0.0.0:8000/api/upload'), body: {"file": DroppedFile});
 // print("Response status: ${response.statusCode}");
