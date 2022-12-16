@@ -67,7 +67,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
                     final events = await controller.pickFiles();
                     if (events.isEmpty) return;
 
-                    Future<DroppedFile> file = acceptFile(events.first);
+                    Uint8List file = await acceptFile(events.first);
                     fetchData(file);
                   },
                   icon: const Icon(
@@ -103,7 +103,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     );
   }
 
-  Future<DroppedFile> acceptFile(dynamic event) async {
+  Future<Uint8List> acceptFile(dynamic event) async {
     final name = event.name;
     final mime = await controller.getFileMIME(event);
     final bytes = await controller.getFileSize(event);
@@ -114,6 +114,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     print('File size: $bytes');
     print('File url: $url');
 
+    final droppedUint = await controller.getFileData(event);
     final droppedFile = DroppedFile(
       name: name,
       bytes: bytes,
@@ -123,7 +124,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
 
     widget.onDroppedFile(droppedFile);
     setState(() => isHighlighted = false);
-    return droppedFile;
+    return droppedUint;
   }
 
    fetchData(file) async {
@@ -131,7 +132,7 @@ var request = http.MultipartRequest('POST', Uri.parse("http://0.0.0.0:8000/api/u
   request.files.add(
     await http.MultipartFile.fromBytes(
       'pdf',
-       file.bytes
+       file
     )
   );
 
