@@ -64,7 +64,7 @@ class DroppedFileWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.file_present,
               size: 40,
               color: Colors.black,
