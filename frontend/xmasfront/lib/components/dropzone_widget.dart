@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'dart:convert';
+import 'dart:core';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
@@ -17,6 +20,7 @@ class DropzoneWidget extends StatefulWidget {
 }
 
 class _DropzoneWidgetState extends State<DropzoneWidget> {
+    
   late DropzoneViewController controller;
   bool isHighlighted = false;
 
@@ -60,11 +64,11 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
                 const SizedBox(height: 20),
                 OutlinedButton.icon(
                   onPressed: () async {
-                    fetchData();
                     final events = await controller.pickFiles();
                     if (events.isEmpty) return;
 
-                    acceptFile(events.first);
+                    Future<DroppedFile> file = acceptFile(events.first);
+                    fetchData(file);
                   },
                   icon: const Icon(
                     Icons.search,
@@ -99,7 +103,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     );
   }
 
-  Future acceptFile(dynamic event) async {
+  Future<DroppedFile> acceptFile(dynamic event) async {
     final name = event.name;
     final mime = await controller.getFileMIME(event);
     final bytes = await controller.getFileSize(event);
@@ -119,13 +123,20 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
 
     widget.onDroppedFile(droppedFile);
     setState(() => isHighlighted = false);
+    return droppedFile;
   }
 
-  void fetchData() async {
-    var dio = Dio();
-    var response =
-        await dio.post("http://0.0.0.0:8000", data: {'name': 'test'});
-    print(response.statusCode);
-    print(response.data.toString());
+   fetchData(file) async {
+var request = http.MultipartRequest('POST', Uri.parse("http://0.0.0.0:8000/api/upload"));
+  request.files.add(
+    await http.MultipartFile.fromBytes(
+      'pdf',
+       file.bytes
+    )
+  );
+
+    // var response = await http.post(Uri.parse('http://0.0.0.0:8000/api/upload'), body: {"file": DroppedFile});
+// print("Response status: ${response.statusCode}");
+// print("Response body: ${response.body}");
   }
 }
