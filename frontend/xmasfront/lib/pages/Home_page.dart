@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:xmasfront/components/class/dropped_file.dart';
 import 'package:xmasfront/components/dropped_file_widget.dart';
 import 'package:xmasfront/components/dropzone_widget.dart';
@@ -24,9 +23,17 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 60),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50),
-                child: Column(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
+                    SizedBox(
+                      height: 50,
+                      child: Image.asset("MA.png"),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
                     const Center(
                       child: Text(
                         "M I S I S    A T L A N T I S",
@@ -106,14 +113,26 @@ class _HomePageState extends State<HomePage> {
                 file: file,
               ),
               const SizedBox(
-                height: 90,
+                height: 20,
               ),
-              Container(
-                height: 60,
+              const SizedBox(
+                child: Text(
+                  "Developed in:",
+                  style: TextStyle(
+                      fontFamily: 'Gilroy',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              SizedBox(
+                height: 50,
                 child: Image.asset(
                   "ITAM.png",
                 ),
-              )
+              ),
             ],
           ),
         ],

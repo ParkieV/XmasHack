@@ -24,7 +24,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     final ColorBackground = isHighlighted ? Colors.blue[300] : Colors.white;
     final ColorButton = isHighlighted ? Colors.blue[100] : Colors.white;
     final ColorBorder =
-        isHighlighted ? Colors.black : Color.fromARGB(255, 144, 255, 163);
+        isHighlighted ? Colors.black : Color.fromARGB(255, 191, 89, 255);
     return Container(
       height: 300,
       width: 400,
