@@ -83,10 +83,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
-                        ),
-                        const SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                       ],
                     ),
@@ -108,6 +105,15 @@ class _HomePageState extends State<HomePage> {
               DroppedFileWidget(
                 file: file,
               ),
+              const SizedBox(
+                height: 90,
+              ),
+              Container(
+                height: 60,
+                child: Image.asset(
+                  "ITAM.png",
+                ),
+              )
             ],
           ),
         ],

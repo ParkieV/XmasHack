@@ -1,15 +1,9 @@
-import 'dart:io';
-import 'dart:convert';
 import 'dart:core';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:xmasfront/pages/result.dart';
 import 'class/dropped_file.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
-import 'package:dio/dio.dart';
 
 class DropzoneWidget extends StatefulWidget {
   final ValueChanged<DroppedFile> onDroppedFile;
@@ -30,7 +24,7 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     final ColorBackground = isHighlighted ? Colors.blue[300] : Colors.white;
     final ColorButton = isHighlighted ? Colors.blue[100] : Colors.white;
     final ColorBorder =
-        isHighlighted ? Colors.black : Color.fromARGB(255, 3, 210, 200);
+        isHighlighted ? Colors.black : Color.fromARGB(255, 144, 255, 163);
     return Container(
       height: 300,
       width: 400,
@@ -137,10 +131,13 @@ class _DropzoneWidgetState extends State<DropzoneWidget> {
     return droppedFile;
   }
 
-   fetchData(file) async {
-        var request = http.MultipartRequest('POST', Uri.parse('http://localhost:8000/api/upload'))..files.add(await http.MultipartFile.fromBytes('file', file.data, filename: file.name));
-        var res = await request.send();
+  fetchData(file) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://localhost:8000/api/upload'))
+      ..files.add(await http.MultipartFile.fromBytes('file', file.data,
+          filename: file.name));
+    var res = await request.send();
 
-        print("Response status: ${res.statusCode}");
+    print("Response status: ${res.statusCode}");
   }
 }
