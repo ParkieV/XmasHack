@@ -113,22 +113,22 @@ class _HomePageState extends State<HomePage> {
                 file: file,
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               const SizedBox(
                 child: Text(
                   "Developed in:",
                   style: TextStyle(
                       fontFamily: 'Gilroy',
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: FontWeight.w700),
                 ),
               ),
               const SizedBox(
-                height: 15,
+                height: 10,
               ),
               SizedBox(
-                height: 50,
+                height: 30,
                 child: Image.asset(
                   "ITAM.png",
                 ),
