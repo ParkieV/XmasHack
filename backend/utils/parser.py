@@ -23,17 +23,21 @@ class FileParser:
             return text
 
     def parser_doc_docx_rtf(self) -> dict:
-        res = {
+        res ={ "0": {
                 "file_id": self.file_path,
+                "file_class": "Договоры поставки",
                 "file_body": self.get_doc_text(),
                 }
+        }
         return res
 
     def parse_pdf(self) -> dict:
-        res = {
+        res ={ "0": {
                 "file_id": self.file_path,
+                "file_class": "Договоры поставки",
                 "file_body": self.get_pdf_text(),
                 }
+        }
         return res
 
     def parse(self) -> str:
@@ -41,9 +45,9 @@ class FileParser:
         print(ext)
         print('-'*10)
         if ext == "pdf":
-            return json.dumps(self.parse_pdf())
+            return self.parse_pdf()
         elif ext in ["doc", "docx", "rtf"]:
-            return json.dumps(self.parser_doc_docx_rtf())
+            return self.parser_doc_docx_rtf()
         else:
             raise ValueError("Unexcepted file extension")
 

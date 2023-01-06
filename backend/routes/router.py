@@ -1,8 +1,8 @@
 import os
 from fastapi import APIRouter, File, UploadFile, Request, Response, HTTPException
-from backend.config import DATA_PATH
+from backend.config import DATA_PATH, BASE_DIR
 from backend.utils.parser import FileParser
-from ml.model1 import get_scores
+from ml.model import predict_docs_class
 
 
 router = APIRouter(prefix="/api")
@@ -20,8 +20,11 @@ async def upload(file: UploadFile = File(...)):
         f.write(contents)
     file.file.close()
     parser = FileParser(filename)
-    # json_string = parser.parse()
-    # answer = get_scores(json_string)
+    json_string = parser.parse()
+    print(type(json_string))
+    # answer = predict_docs_class(BASE_DIR + "/ml/data.json")
+    answer = predict_docs_class(json_string)
+    print(answer)
     return {"message": f"Successfuly uploaded {file.filename}"}
 
 
